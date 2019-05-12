@@ -43,7 +43,16 @@ class ReplayMemory(object):
 
 class DeepQNetwork(object):
 
-    def __init__(self, input_size, number_of_actions, gamma):
+    def __init__(self, input_size, number_of_actions, gamma, temperature=100):
+        """
+
+        :param input_size:
+        :param number_of_actions: For map there are 3 actions left, right, forward.
+        :param gamma:
+        :param temperature: Parameter to multiply the SoftMax function. The higher the value the surer the car will be,
+        because the probability will be increased. If the value is to high the car will do less exploring.
+        If temperature == 0 the AI is off.
+        """
         self.gamma = gamma
         self.reward_window = list()
         self.neural_network = NeuralNetwork(input_size, number_of_actions)
@@ -53,10 +62,11 @@ class DeepQNetwork(object):
         self.last_state = torch.Tensor(input_size).unsqueeze(0)
         self.last_reward = 0
         self.last_action = 0
+        self.output_file = '../output/last_brain.pth'
+        self.temperature = temperature
 
     def select_action(self, state):
-        temperature = 7
-        state_variable = Variable(state, volatile=True) * temperature
+        state_variable = Variable(state, volatile=True) * self.temperature
         probabilities = F.softmax(self.neural_network(state_variable))
 
         action = probabilities.multinomial()
@@ -65,9 +75,9 @@ class DeepQNetwork(object):
 
     def learn(self, batch_state, batch_next_state, batch_reward, batch_action):
         outputs = self.neural_network(batch_state).gather(1, batch_action.unsqueeze(1)).squeeze(1)
-        #outputs = self.model(batch_state).gather(1, batch_action.unsqueeze(1)).squeeze(1)
+        # outputs = self.model(batch_state).gather(1, batch_action.unsqueeze(1)).squeeze(1)
         next_outputs = self.neural_network(batch_next_state).detach().max(1)[0]
-        target = self.gamma *  next_outputs + batch_reward
+        target = self.gamma * next_outputs + batch_reward
         td_loss = F.smooth_l1_loss(outputs, target)
         self.optimizer.zero_grad()
         td_loss.backward(retain_variables=True)
@@ -81,7 +91,7 @@ class DeepQNetwork(object):
         action = self.select_action(new_state)
 
         if len(self.memory.memory) > 100:
-            batch_state, batch_next_state,  batch_action, batch_reward = self.memory.sample(100)
+            batch_state, batch_next_state, batch_action, batch_reward = self.memory.sample(100)
             self.learn(batch_state, batch_next_state, batch_reward, batch_action)
 
         self.last_action = action
@@ -94,17 +104,18 @@ class DeepQNetwork(object):
         return action
 
     def score(self):
-        return sum(self.reward_window)/(len(self.reward_window)+1.)
+        return sum(self.reward_window) / (len(self.reward_window) + 1.)
 
     def save(self):
         torch.save({'state_dict': self.neural_network.state_dict(),
-                    'optimizer': self.optimizer.state_dict()}, 'last_brain.pth')
+                    'optimizer': self.optimizer.state_dict()},
+                   self.output_file)
 
     def load(self):
-        if os.path.isfile('last_brain.pth'):
+        if os.path.isfile(self.output_file):
             print("=> loading checkpoint... ")
-            checkpoint = torch.load('last_brain.pth')
-            self.model.load_state_dict(checkpoint['state_dict'])
+            checkpoint = torch.load(self.output_file)
+            self.neural_network.load_state_dict(checkpoint['state_dict'])
             self.optimizer.load_state_dict(checkpoint['optimizer'])
             print("done !")
         else:

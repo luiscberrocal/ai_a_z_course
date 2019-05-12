@@ -12,9 +12,9 @@ from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProper
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.vector import Vector
-
+from time import time
 # Adding this line if we don't want the right click to put a red point
-from my_ai import DeepQNetwork
+from Self_Driving_Car.my_ai import DeepQNetwork
 
 # Importing the Dqn object from our AI in ai.py
 
@@ -113,6 +113,11 @@ class Game(Widget):
     ball1 = ObjectProperty(None)
     ball2 = ObjectProperty(None)
     ball3 = ObjectProperty(None)
+    trips = 0
+    round_trips = 0
+    start_time = time()
+    last_round_trip_time = time()
+
 
     def serve_car(self):
         self.car.center = self.center
@@ -132,6 +137,7 @@ class Game(Widget):
         longueur = self.width
         largeur = self.height
         if first_update:
+            self.start_time = time()
             init()
 
         xx = goal_x - self.car.x
@@ -170,8 +176,17 @@ class Game(Widget):
             last_reward = -1
 
         if distance < 100:
+            self.trips += 1
             goal_x = self.width - goal_x
             goal_y = self.height - goal_y
+            if self.trips % 2 == 0:
+                round_trip_time = time()
+                self.round_trips += 1
+                time_in_secongs = round_trip_time - self.last_round_trip_time
+
+                self.last_round_trip_time = round_trip_time
+                print('Round trip {} in {}'.format(self.round_trips, time_in_secongs))
+
         last_distance = distance
 
 
