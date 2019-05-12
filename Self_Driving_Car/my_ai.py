@@ -43,7 +43,14 @@ class ReplayMemory(object):
 
 class DeepQNetwork(object):
 
-    def __init__(self, input_size, number_of_actions, gamma):
+    def __init__(self, input_size, number_of_actions, gamma, temperature=7):
+        """
+
+        :param input_size:
+        :param number_of_actions: For map there are 3 actions left, right, forward.
+        :param gamma:
+        :param temperature: If temperature == 0 the AI is off.
+        """
         self.gamma = gamma
         self.reward_window = list()
         self.neural_network = NeuralNetwork(input_size, number_of_actions)
@@ -54,10 +61,10 @@ class DeepQNetwork(object):
         self.last_reward = 0
         self.last_action = 0
         self.output_file = '../output/last_brain.pth'
+        self.temperature = temperature
 
     def select_action(self, state):
-        temperature = 7
-        state_variable = Variable(state, volatile=True) * temperature
+        state_variable = Variable(state, volatile=True) * self.temperature
         probabilities = F.softmax(self.neural_network(state_variable))
 
         action = probabilities.multinomial()
