@@ -113,6 +113,8 @@ class Game(Widget):
     ball1 = ObjectProperty(None)
     ball2 = ObjectProperty(None)
     ball3 = ObjectProperty(None)
+    trips = 0
+    round_trips = 0
 
     def serve_car(self):
         self.car.center = self.center
@@ -170,8 +172,13 @@ class Game(Widget):
             last_reward = -1
 
         if distance < 100:
+            self.trips += 1
             goal_x = self.width - goal_x
             goal_y = self.height - goal_y
+            if self.trips % 2 == 0:
+                self.round_trips += 1
+                print('Round trip {}'.format(self.round_trips))
+            
         last_distance = distance
 
 
