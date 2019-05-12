@@ -14,7 +14,7 @@ from kivy.uix.widget import Widget
 from kivy.vector import Vector
 
 # Adding this line if we don't want the right click to put a red point
-from my_ai import DeepQNetwork
+from Self_Driving_Car.my_ai import DeepQNetwork
 
 # Importing the Dqn object from our AI in ai.py
 

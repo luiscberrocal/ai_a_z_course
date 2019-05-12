@@ -108,3 +108,5 @@ venv.bak/
 \.idea/
 
 output/
+
+Self_Driving_Car/last_brain\.pth
