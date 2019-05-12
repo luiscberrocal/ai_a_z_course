@@ -43,13 +43,15 @@ class ReplayMemory(object):
 
 class DeepQNetwork(object):
 
-    def __init__(self, input_size, number_of_actions, gamma, temperature=7):
+    def __init__(self, input_size, number_of_actions, gamma, temperature=100):
         """
 
         :param input_size:
         :param number_of_actions: For map there are 3 actions left, right, forward.
         :param gamma:
-        :param temperature: If temperature == 0 the AI is off.
+        :param temperature: Parameter to multiply the SoftMax function. The higher the value the surer the car will be,
+        because the probability will be increased. If the value is to high the car will do less exploring.
+        If temperature == 0 the AI is off.
         """
         self.gamma = gamma
         self.reward_window = list()
