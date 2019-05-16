@@ -42,6 +42,8 @@ https://github.com/ppaquette/gym-doom
 
 ![Add Python Interpreter](./images/add_python_interpreter.png)
 
+On Windows the virtual environments are found in **C:\Anaconda3\envs** for example **C:\Anaconda3\envs\ai_a_z_env\python.exe**
+
 ![Select Python Interpreter](./images/select_python_interpreter.png)
 
 ![Add Python Interpreter 2](./images/add_python_interpreter_2.png)
