@@ -12,7 +12,7 @@ Run
 ```
 conda activate ai_a_z_env
 ```
-Run
+On Windows run
 
 ```
 conda install -c pytorch pytorch
@@ -21,8 +21,17 @@ pip install gym
 pip install gym-pull
 
 ```
+On Mac
+```
+conda install -c pytorch pytorch
+conda install -c akode gym
+conda install -c menpo ffmpe
+
+```
 
 ###Error with orignal course instructions
+
+This error ocurs in Windows
 When running this command ``conda install -c akode gym`` you get an error.
 
 In question and anwers I found this
