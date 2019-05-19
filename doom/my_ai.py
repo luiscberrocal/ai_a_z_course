@@ -24,4 +24,10 @@ class ConvolutionalNeuralNetwork(nn.Module):
         self.convolution_layers[3] = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=2)
 
         self.fully_connected_layer = list()
-        self.fully_connected_layer[0] = nn.linear()
+        #self.fully_connected_layer[0] = nn.linear()
+
+
+
+if __name__ == '__main__':
+    c = ConvolutionalNeuralNetwork()
+    print(c)

@@ -22,14 +22,18 @@ pip install gym-pull
 
 ```
 On Mac
+
+brew install cmake
+
+ boost, boost-python, sdl2
 ```
 conda install -c pytorch pytorch
-conda install -c akode gym
+pip install gym==0.9.3
 conda install -c menpo ffmpe
 
 ```
 
-###Error with orignal course instructions
+###Error with orignal course instructions on Windows
 
 This error ocurs in Windows
 When running this command ``conda install -c akode gym`` you get an error.
